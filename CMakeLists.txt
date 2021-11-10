@@ -21,18 +21,18 @@ if (NOT DEFINED ENV{GLM_HOME})
     message(FATAL_ERROR "found no env named GLM_HOME")
 endif()
 
-SET(GLFW_HOME "$ENV{GLFW_HOME}/include")
-SET(GLAD_HOME "$ENV{GLAD_HOME}/include")
+SET(GLFW_HOME "$ENV{GLFW_HOME}")
+SET(GLAD_HOME "$ENV{GLAD_HOME}")
 SET(GLM_HOME "$ENV{GLM_HOME}/glm")
 
 # 设置头文件目录
-include_directories(${GLFW_HOME})
-include_directories(${GLAD_HOME})
+include_directories("${GLFW_HOME}/include")
+include_directories("${GLAD_HOME}/include")
 include_directories(${GLM_HOME})
 
 # 添加 GLFW3 预编译库
 add_library(glfw SHARED IMPORTED)
-SET_TARGET_PROPERTIES(glfw PROPERTIES IMPORTED_LOCATION "/usr/local/Cellar/glfw/3.3.4/lib/libglfw.3.dylib")
+SET_TARGET_PROPERTIES(glfw PROPERTIES IMPORTED_LOCATION "${GLFW_HOME}/lib/libglfw.3.dylib")
 
 
 # 创建可执行文件
