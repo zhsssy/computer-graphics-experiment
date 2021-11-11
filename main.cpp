@@ -1,5 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
@@ -10,18 +12,56 @@ void processInput(GLFWwindow *window);
 const unsigned int SCR_WIDTH = 1440;
 const unsigned int SCR_HEIGHT = 800;
 
-const char *vertexShaderSource = "#version 330 core\n"
-                                 "layout (location = 0) in vec3 aPos;\n"
+// 顶点着色器
+const char *vertexShaderSource = "#version 330\n"
+                                 "\n"
+                                 "layout(location = 0) in vec3 iPos;\n"
+                                 "layout(location = 1) in vec3 iColor;\n"
+                                 "\n"
+                                 "uniform mat4 mMat;\n"
+                                 "uniform mat4 vMat;\n"
+                                 "uniform mat4 pMat;\n"
+                                 "\n"
+                                 "out vec3 color;\n"
+                                 "\n"
                                  "void main()\n"
                                  "{\n"
-                                 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-                                 "}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
-                                   "out vec4 FragColor;\n"
+                                 "	gl_Position = pMat * vMat * mMat * vec4(iPos, 1);\n"
+                                 "	color = iColor;\n"
+                                 "}";
+// 片元着色器
+const char *fragmentShaderSource = "#version 330\n"
+                                   "in vec3 color;\n"
+                                   "\n"
                                    "void main()\n"
                                    "{\n"
-                                   "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-                                   "}\n\0";
+                                   "	gl_FragColor = vec4(color, 1);\n"
+                                   "}";
+
+unsigned int MyShaderProgram;
+unsigned int PVBO, CVBO, VAO, EBO;
+glm::mat4 mMat, vMat, pMat;
+
+// 模型数据
+int VNB = 4;
+float MyPoints[] = {
+        -0.5f, -0.5f, 0.5f,  // bottom left
+        0.5f, -0.5f, 0.0f,   // bottom right
+        0.5f, 0.5f, -0.5f,   // top right
+        -0.5f, 0.5f, 0.0f   // top left
+};
+float MyColors[] = {
+        1.0f, 0.0f, 0.0f,  // top right
+        0.0f, 1.0f, 0.0f,  // bottom right
+        0.0f, 0.0f, 1.0f,  // bottom left
+        0.5f, 0.2f, 0.8f   // top left
+};
+int FNB = 2;
+int MyIndices[] = {  // note that we start from 0!
+        0, 1, 2,  // first Triangle
+        0, 2, 3   // second Triangle
+};
+
 
 int main() {
     // glfw: initialize and configure
@@ -37,7 +77,8 @@ int main() {
 
     // glfw window creation
     // --------------------
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    // 创建 windows 并确定大小
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ncu-computer-graphics-experiment", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
