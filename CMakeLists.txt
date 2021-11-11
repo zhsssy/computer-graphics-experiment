@@ -23,7 +23,7 @@ endif()
 
 SET(GLFW_HOME "$ENV{GLFW_HOME}")
 SET(GLAD_HOME "$ENV{GLAD_HOME}")
-SET(GLM_HOME "$ENV{GLM_HOME}/glm")
+SET(GLM_HOME "$ENV{GLM_HOME}")
 
 # 设置头文件目录
 include_directories("${GLFW_HOME}/include")
