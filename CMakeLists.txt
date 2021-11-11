@@ -1,25 +1,27 @@
 cmake_minimum_required(VERSION 3.20)
 project(computer-graphics-experiment)
 
-#CMAKE_POLICY(SET CMP0054 NEW) #-- fixes IF() with quoted args
-#CMAKE_POLICY(SET CMP0057 NEW) #-- enables IF(.. IN_LIST ..)
+CMAKE_POLICY(SET CMP0054 NEW) #-- fixes IF() with quoted args
+CMAKE_POLICY(SET CMP0057 NEW) #-- enables IF(.. IN_LIST ..)
+
 
 set(CMAKE_CXX_STANDARD 17)
 
-execute_process(
-        COMMAND ${CMAKE_COMMAND} -E environment
-)
+# debug
+#execute_process(
+#        COMMAND ${CMAKE_COMMAND} -E environment
+#)
 
 # 检查环境变量
 if (NOT DEFINED ENV{GLFW_HOME})
     message(FATAL_ERROR "found no env named GLFW_HOME")
-endif()
+endif ()
 if (NOT DEFINED ENV{GLAD_HOME})
     message(FATAL_ERROR "found no env named GLAD_HOME")
-endif()
+endif ()
 if (NOT DEFINED ENV{GLM_HOME})
     message(FATAL_ERROR "found no env named GLM_HOME")
-endif()
+endif ()
 
 SET(GLFW_HOME "$ENV{GLFW_HOME}")
 SET(GLAD_HOME "$ENV{GLAD_HOME}")

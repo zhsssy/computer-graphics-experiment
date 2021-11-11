@@ -13,55 +13,19 @@ const unsigned int SCR_WIDTH = 1440;
 const unsigned int SCR_HEIGHT = 800;
 
 // 顶点着色器
-const char *vertexShaderSource = "#version 330\n"
-                                 "\n"
-                                 "layout(location = 0) in vec3 iPos;\n"
-                                 "layout(location = 1) in vec3 iColor;\n"
-                                 "\n"
-                                 "uniform mat4 mMat;\n"
-                                 "uniform mat4 vMat;\n"
-                                 "uniform mat4 pMat;\n"
-                                 "\n"
-                                 "out vec3 color;\n"
-                                 "\n"
+const char *vertexShaderSource = "#version 330 core\n"
+                                 "layout (location = 0) in vec3 aPos;\n"
                                  "void main()\n"
                                  "{\n"
-                                 "	gl_Position = pMat * vMat * mMat * vec4(iPos, 1);\n"
-                                 "	color = iColor;\n"
-                                 "}";
+                                 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+                                 "}\0";
 // 片元着色器
-const char *fragmentShaderSource = "#version 330\n"
-                                   "in vec3 color;\n"
-                                   "\n"
+const char *fragmentShaderSource = "#version 330 core\n"
+                                   "out vec4 FragColor;\n"
                                    "void main()\n"
                                    "{\n"
-                                   "	gl_FragColor = vec4(color, 1);\n"
-                                   "}";
-
-unsigned int MyShaderProgram;
-unsigned int PVBO, CVBO, VAO, EBO;
-glm::mat4 mMat, vMat, pMat;
-
-// 模型数据
-int VNB = 4;
-float MyPoints[] = {
-        -0.5f, -0.5f, 0.5f,  // bottom left
-        0.5f, -0.5f, 0.0f,   // bottom right
-        0.5f, 0.5f, -0.5f,   // top right
-        -0.5f, 0.5f, 0.0f   // top left
-};
-float MyColors[] = {
-        1.0f, 0.0f, 0.0f,  // top right
-        0.0f, 1.0f, 0.0f,  // bottom right
-        0.0f, 0.0f, 1.0f,  // bottom left
-        0.5f, 0.2f, 0.8f   // top left
-};
-int FNB = 2;
-int MyIndices[] = {  // note that we start from 0!
-        0, 1, 2,  // first Triangle
-        0, 2, 3   // second Triangle
-};
-
+                                   "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                                   "}\n\0";
 
 int main() {
     // glfw: initialize and configure
@@ -77,9 +41,8 @@ int main() {
 
     // glfw window creation
     // --------------------
-    // 创建 windows 并确定大小
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ncu-computer-graphics-experiment", NULL, NULL);
-    if (window == NULL) {
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
+    if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
@@ -99,24 +62,24 @@ int main() {
     // ------------------------------------
     // vertex shader
     int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
     glCompileShader(vertexShader);
     // check for shader compile errors
     int success;
     char infoLog[512];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
     // fragment shader
     int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
     glCompileShader(fragmentShader);
     // check for shader compile errors
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
     // link shaders
@@ -127,7 +90,7 @@ int main() {
     // check for linking errors
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
     }
     glDeleteShader(vertexShader);
