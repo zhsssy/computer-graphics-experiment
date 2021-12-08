@@ -14,5 +14,5 @@ void main()
 	gl_Position = pMat * vMat * mMat * vec4(iPos, 1.0f);
 // 指定颜色
 // 灰色
-	color = vec3(0.5f,0.5f,0.5f);
+	color = iColor;
 }

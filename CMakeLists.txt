@@ -13,6 +13,8 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/glfw/lib/)
 # 编译 glad
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/glad)
 
+add_subdirectory(src)
+
 add_executable(computer-graphics-experiment main.cpp)
 
 target_link_libraries(computer-graphics-experiment opengl32)
