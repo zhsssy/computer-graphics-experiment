@@ -26,7 +26,6 @@ unsigned int VAO[10];
 unsigned int VBO[10];
 glm::mat4 mMat, vMat, pMat;
 
-
 float deCastVertices[100];
 float bernsteinVertices[2000];
 
@@ -41,11 +40,6 @@ float transX(double x) { return (float) ((float) (2 * x) - SCR_WIDTH) / (SCR_WID
 
 float transY(double y) { return (float) (SCR_HEIGHT - 2 * (float) y) / (SCR_HEIGHT * 1.0f); }
 
-void two_points_set_float_array(float *array, float x1, float y1, float x2, float y2) {
-    int i = 0;
-    array[i++] = x1, array[i++] = y1, array[i++] = 0;
-    array[i++] = x2, array[i++] = y2, array[i++] = 0;
-}
 
 Point Approximate(float t, float x1, float y1, float x2, float y2) {
     float x = x1 * (1 - t) + x2 * t;
@@ -61,7 +55,43 @@ int fact(int n) {
         return 1;
 }
 
-vector<float> bezier(float *px, float *py, int n) {
+
+float mix(float a, float b, float t) {
+    return a * (1.0f - t) + b * t;
+}
+
+float BezierQuadratic(float A, float B, float C, float t) {
+    float AB = mix(A, B, t);
+    float BC = mix(B, C, t);
+    return mix(AB, BC, t);
+}
+
+float BezierCubic(float A, float B, float C, float D, float t) {
+    float ABC = BezierQuadratic(A, B, C, t);
+    float BCD = BezierQuadratic(B, C, D, t);
+    return mix(ABC, BCD, t);
+}
+
+float BezierQuartic(float A, float B, float C, float D, float E, float t) {
+    float ABCD = BezierCubic(A, B, C, D, t);
+    float BCDE = BezierCubic(B, C, D, E, t);
+    return mix(ABCD, BCDE, t);
+}
+
+float BezierQuintic(float A, float B, float C, float D, float E, float F, float t) {
+    float ABCDE = BezierQuartic(A, B, C, D, E, t);
+    float BCDEF = BezierQuartic(B, C, D, E, F, t);
+    return mix(ABCDE, BCDEF, t);
+}
+
+float BezierSextic(float A, float B, float C, float D, float E, float F, float G, float t) {
+    float ABCDEF = BezierQuintic(A, B, C, D, E, F, t);
+    float BCDEFG = BezierQuintic(B, C, D, E, F, G, t);
+    return mix(ABCDEF, BCDEFG, t);
+}
+
+
+vector<float> bennsteinBezier(float *px, float *py, int n) {
     float u, x, y, b;
     vector<float> ans;
     ans.emplace_back(px[0]), ans.emplace_back(py[0]), ans.emplace_back(0);
@@ -69,10 +99,7 @@ vector<float> bezier(float *px, float *py, int n) {
     int nfact = fact(n - 1);
 
     for (u = 0.1; u < 1; u += 0.1) {
-        x = 0;
-        y = 0;
-
-        // calculate wrt the formula for all n points
+        x = 0, y = 0;
         for (int i = 0; i < n; i++) {
             b = (nfact * pow(1 - u, n - 1 - i) * pow(u, i)) / (fact(n - 1 - i) * fact(i));
             x += b * px[i];
@@ -103,11 +130,12 @@ void bind_data() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
 
-//    glBindVertexArray(VAO[1]);
-//    glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(deCastVertices), deCastVertices, GL_STATIC_DRAW);
-//    glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
-//    glEnableVertexAttribArray(0);
+    glBindVertexArray(VAO[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(deCastVertices), deCastVertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
@@ -115,23 +143,62 @@ void bind_data() {
 void display(Shader &shader) {
     glClear(GL_COLOR_BUFFER_BIT);
     // 主窗口
+//    shader.use();
+//    shader.setVec3("setColor", 0.3f, 0.5f, 0.5f);
+//    glBindVertexArray(VAO[0]);
+//    glDrawArrays(GL_LINE_STRIP, 0, 11);
+
     shader.use();
     shader.setVec3("setColor", 0.3f, 0.5f, 0.5f);
-    glBindVertexArray(VAO[0]);
-    glDrawArrays(GL_POINTS, 0, 11);
+    glBindVertexArray(VAO[1]);
+    glDrawArrays(GL_LINE_STRIP, 0, 10);
 }
 
 int main() {
     float x[] = {-0.1f, 0.1f, 0.2f, 0.3f};
     float y[] = {-0.2f, 0.4f, -0.3f, 0.2f};
 
-    auto vec = bezier(x, y, 5);
+    auto vec = bennsteinBezier(x, y, 4);
 
     cover_vec_to_array(vec, bernsteinVertices);
     cout << vec.size() << endl;
     for (auto i: vec) {
         cout << i << " ";
     }
+
+    struct SPoint {
+        float x;
+        float y;
+    };
+
+    SPoint controlPoints[7] =
+            {
+                    {-0.1f, -0.2f},
+                    {0.12f, 0.7f},
+                    {-0.5f, 0.9f},
+                    {-0.2f, 0.8f},
+                    {0.4f,  0.2f},
+                    {-0.4f, 0.3f},
+                    {0.2f,  0.3f},
+            };
+
+    const float c_numPoints = 10;
+    vector<float> test;
+    for (int i = 0; i < c_numPoints; ++i) {
+        float t = ((float) i) / (float(c_numPoints - 1));
+        SPoint p;
+        p.x = BezierSextic(controlPoints[0].x, controlPoints[1].x, controlPoints[2].x, controlPoints[3].x,
+                           controlPoints[4].x, controlPoints[5].x, controlPoints[6].x, t);
+        p.y = BezierSextic(controlPoints[0].y, controlPoints[1].y, controlPoints[2].y, controlPoints[3].y,
+                           controlPoints[4].y, controlPoints[5].y, controlPoints[6].y, t);
+        test.emplace_back(p.x), test.emplace_back(p.y), test.emplace_back(0);
+    }
+    cout << endl << test.size() << endl;
+    for (auto i: test) {
+        cout << i << " ";
+    }
+    cover_vec_to_array(test, deCastVertices);
+
     //实例化glfw函数
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -159,14 +226,13 @@ int main() {
 
     //渲染命令
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glLineWidth(2.5f);
+    glLineWidth(5.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     // 设置顶点的大小为10像素宽
     glPointSize(10.0f);
 
     // 变换矩阵
     mMat = glm::mat4(1.0f);
-    mMat = glm::scale(mMat, glm::vec3(0.0001f, 0.000001f, 1.0f));
     vMat = glm::mat4(1.0f);
     pMat = glm::mat4(1.0f);
 
