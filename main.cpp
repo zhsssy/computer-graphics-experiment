@@ -6,13 +6,14 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "shader.h"
+
 #pragma execution_character_set("utf-8")
 // 窗口尺寸宏定义
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 using namespace std;
 
-unsigned int PVBO, CVBO, VAO, EBO;
+unsigned int PVBO, CVBO, VAO, EBO, TBO;
 glm::mat4 mMat, vMat, pMat;
 
 int VNB = 4;
@@ -21,6 +22,12 @@ float MyPoints[] = {
         0.5f, -0.5f, 0.0f,   // bottom right
         0.5f, 0.5f, 0.0f,   // top right
         -0.5f, 0.5f, 0.0f   // top left
+};
+float TPoints[] = {
+        -0.8f, -0.8f, 0.0f,  // bottom left
+        0.8f, -0.8f, 0.0f,   // bottom right
+        0.8f, 0.8f, 0.0f,   // top right
+        -0.8f, 0.8f, 0.0f   // top left
 };
 float MyColors[] = {
         1.0f, 0.0f, 0.0f,  // top right
@@ -53,7 +60,6 @@ void bind_data() {
     // 将内存中的顶点坐标数据传输到显存的 PVBO 中
     glBindBuffer(GL_ARRAY_BUFFER, PVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * VNB, MyPoints, GL_STATIC_DRAW);
-
     // 给顶点着色器中location为0的位置绑定数据
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
@@ -61,7 +67,6 @@ void bind_data() {
     // 将内存中的顶点颜色数据传输到显存的 CVBO 中
     glBindBuffer(GL_ARRAY_BUFFER, CVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * VNB, MyColors, GL_STATIC_DRAW);
-
     // 给顶点着色器中location为1的位置绑定数据
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(1);
@@ -106,7 +111,7 @@ int main() {
         return -1;
     }
     // 相对 shader 路径
-    Shader shader("../vs.glsl","../fs.glsl");
+    Shader shader("../vs.glsl", "../fs.glsl");
     bind_data();
 
     // 开启深度测试
@@ -132,9 +137,9 @@ int main() {
 //    pMat = glm::ortho(-ratio, ratio, -1.0f, 1.0f, 0.9f, 100.0f);
 //    pMat = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 100.0f);
     shader.use();
-    shader.setMat4("mMat",mMat);
-    shader.setMat4("vMat",vMat);
-    shader.setMat4("pMat",pMat);
+    shader.setMat4("mMat", mMat);
+    shader.setMat4("vMat", vMat);
+    shader.setMat4("pMat", pMat);
 
     // 进入循环
     while (!glfwWindowShouldClose(window)) {
@@ -144,7 +149,7 @@ int main() {
         shader.use();
         glBindVertexArray(VAO);
         // 画三角形
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         // 画顶点
         glDrawArrays(GL_POINTS, 0, VNB);
         glfwSwapBuffers(window);
