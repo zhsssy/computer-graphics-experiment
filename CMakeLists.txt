@@ -7,6 +7,7 @@ include_directories(include)
 include_directories(glad/include)
 include_directories(glfw/include)
 include_directories(glm)
+include_directories(assimp)
 
 # 链接 glfw lib
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/glfw/lib/)
