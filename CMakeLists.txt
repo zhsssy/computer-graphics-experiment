@@ -10,10 +10,12 @@ include_directories(glad/include)
 include_directories(glfw/include)
 include_directories(glm)
 include_directories(assimp/include)
+include_directories(soil/include)
 
 # 链接 glfw assimp
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/glfw/lib/)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/assimp/lib/)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/soil/lib/)
 # 编译 glad
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/glad)
 
@@ -25,3 +27,4 @@ target_link_libraries(computer-graphics-experiment opengl32)
 target_link_libraries(computer-graphics-experiment glad)
 target_link_libraries(computer-graphics-experiment debug glfw3d optimized glfw3)
 target_link_libraries(computer-graphics-experiment assimp)
+target_link_libraries(computer-graphics-experiment soil)
