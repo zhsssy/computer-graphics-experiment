@@ -5,24 +5,25 @@
 #include <cstdlib>
 #include <cmath>
 #include <vector>
+
 using namespace std;
 
-const unsigned int MAXN=600*800*2;
+const unsigned int MAXN = 600 * 800 * 2;
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-const char* vertexShaderPath="../../../vs.glsl";
-const char* fragmentShaderPath="../../../fs.glsl";
+const char *vertexShaderPath = "../../../vs.glsl";
+const char *fragmentShaderPath = "../../../fs.glsl";
 
 unsigned int VBO, VAO;
 int theSize;
 
 
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
 
-int main(){
+int main() {
     //实例化glfw函数
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -30,8 +31,8 @@ int main(){
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //创建glfw窗口
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Breseham", nullptr, nullptr);
-    if (window == nullptr){
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Breseham", nullptr, nullptr);
+    if (window == nullptr) {
         cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
         return -1;
@@ -40,12 +41,12 @@ int main(){
     glfwMakeContextCurrent(window);//将window设置为接下来操作的主窗口
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){//使用glad加载glfw的所有函数指针
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {//使用glad加载glfw的所有函数指针
         cout << "Failed to initialize GLAD" << endl;
         return -1;
     }
 
-    Shader ourShader(vertexShaderPath,fragmentShaderPath);//创建着色器程序
+    Shader ourShader(vertexShaderPath, fragmentShaderPath);//创建着色器程序
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -56,7 +57,7 @@ int main(){
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
 
-    while (!glfwWindowShouldClose(window)){
+    while (!glfwWindowShouldClose(window)) {
         //输入
         processInput(window);
 
@@ -65,10 +66,10 @@ int main(){
         glClear(GL_COLOR_BUFFER_BIT);
 
         //作图
-        ourShader.setVec4("ourColor",1.0f,0.0f,0.0f,1.0f);
+        ourShader.setVec4("ourColor", 1.0f, 0.0f, 0.0f, 1.0f);
         ourShader.use();
         glBindVertexArray(VAO);
-        glDrawArrays(GL_POINTS, 0, theSize/3);
+        glDrawArrays(GL_POINTS, 0, theSize / 3);
 
         //检查并调用事件，交换缓冲
         glfwSwapBuffers(window);
@@ -82,10 +83,11 @@ int main(){
     return 0;
 }
 
-void processInput(GLFWwindow *window){
+void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
-void framebuffer_size_callback(GLFWwindow* window, int width, int height){
+
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }

@@ -14,8 +14,8 @@
 #include "Model.h"
 #include <iostream>
 
-const char *vertexShaderPath = "../../../testvs.glsl";
-const char *fragmentShaderPath = "../../../testfs.glsl";
+const char *vertexShaderPath = "../../../model_vs.glsl";
+const char *fragmentShaderPath = "../../../model_fs.glsl";
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
