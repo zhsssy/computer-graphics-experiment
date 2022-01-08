@@ -155,7 +155,7 @@ void display(Shader &shader) {
 }
 
 int main() {
-    float x[] = {-0.1f, 0.1f, 0.2f, 0.3f};
+    float x[] = {-0.1f, -0.1f, 0.4f, 0.3f};
     float y[] = {-0.2f, 0.4f, -0.3f, 0.2f};
 
     auto vec = bennsteinBezier(x, y, 4);

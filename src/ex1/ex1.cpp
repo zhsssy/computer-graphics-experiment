@@ -2,13 +2,9 @@
 #include <GLFW/glfw3.h>
 #include "shader.h"
 #include <iostream>
-#include <cstdlib>
-#include <cmath>
-#include <vector>
 
 using namespace std;
 
-const unsigned int MAXN = 600 * 800 * 2;
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 const char *vertexShaderPath = "../../../vs.glsl";
@@ -16,7 +12,7 @@ const char *fragmentShaderPath = "../../../fs.glsl";
 
 unsigned int VBO, VAO;
 int theSize;
-
+float verticesLine[1000];
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
