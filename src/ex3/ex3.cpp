@@ -39,7 +39,11 @@ float lineArray[100];
 
 float conhenVertices[6], conhenVertices2[6];
 float liangVertices[6], liangVertices2[6];
-float suthHodgVertices[1000];
+float suthHodgVertices[1000], suthHodgVertices2[1000]{
+        0.3f, 0.2f, 0.0f,
+        -0.2f, 0.6f, 0.0f,
+        0.2f, 0.1f, 0.0f
+};
 
 // turn vector to array
 /*
@@ -198,10 +202,17 @@ void bind_data() {
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
         glEnableVertexAttribArray(0);
     }
-    // SUtherlandHodgeman 裁剪图形
+    // SutherlandHodgeman 裁剪图形
     glBindVertexArray(VAO[5]);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[6]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(suthHodgVertices), suthHodgVertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
+
+    // SutherlandHodgeman 原始图形
+    glBindVertexArray(VAO[6]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[7]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(suthHodgVertices2), suthHodgVertices2, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
 
@@ -240,6 +251,11 @@ void display(Shader &shader) {
     glBindVertexArray(VAO[4]);
     glDrawArrays(GL_LINES, 0, 2);
 
+    shader.use();
+    shader.setVec3("setColor", 0.3f, 0.3f, 0.3f);
+    glBindVertexArray(VAO[6]);
+    glDrawArrays(GL_LINE_LOOP, 0, 3);
+
     // 原始线条
     shader.use();
     shader.setVec3("setColor", 0.0f, 1.0f, 0.0f);
@@ -271,7 +287,6 @@ int main() {
         cout << "Failed to initialize GLAD" << endl;
         return -1;
     }
-    // 初始化
     Shader shader(vertexShaderPath, fragmentShaderPath);//创建着色器程序
     bind_data();
 
