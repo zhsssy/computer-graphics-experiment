@@ -142,11 +142,11 @@ void bind_data() {
 
 void display(Shader &shader) {
     glClear(GL_COLOR_BUFFER_BIT);
-    // 主窗口
-//    shader.use();
-//    shader.setVec3("setColor", 0.3f, 0.5f, 0.5f);
-//    glBindVertexArray(VAO[0]);
-//    glDrawArrays(GL_LINE_STRIP, 0, 11);
+//    主窗口
+    shader.use();
+    shader.setVec3("setColor", 0.3f, 0.5f, 0.5f);
+    glBindVertexArray(VAO[0]);
+    glDrawArrays(GL_LINE_STRIP, 0, 11);
 
     shader.use();
     shader.setVec3("setColor", 0.3f, 0.5f, 0.5f);
@@ -206,7 +206,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //创建glfw窗口
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ex3", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ex4", nullptr, nullptr);
     if (window == nullptr) {
         cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
@@ -233,6 +233,7 @@ int main() {
 
     // 变换矩阵
     mMat = glm::mat4(1.0f);
+    mMat = glm::scale(mMat, glm::vec3(2.0f, 2.0f, 1.0f));
     vMat = glm::mat4(1.0f);
     pMat = glm::mat4(1.0f);
 

@@ -30,9 +30,9 @@ glm::mat4 mMat, vMat, pMat;
 // 测试数据
 int theSize = 4;
 int FNB = 2;
-int MyIndices[] = {  // note that we start from 0!
-        0, 1, 2,  // first Triangle
-        0, 2, 3   // second Triangle
+int MyIndices[] = {
+        0, 1, 2,
+        0, 2, 3
 };
 // 测试数据结束
 float lineArray[100];
@@ -166,41 +166,41 @@ void bind_data() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO[1]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(MyIndices), MyIndices, GL_DYNAMIC_DRAW);
 
-//    // 截取在内部的
-//    if (ex2_cohen_sutherland(0.3, -0.2, 0.2, 0.6)) {
-//        // 整条线
-//        set_float_array(conhenVertices, 0.3, -0.2, 0.2, 0.6);
-//        glBindVertexArray(VAO[1]);
-//        glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
-//        glBufferData(GL_ARRAY_BUFFER, sizeof(conhenVertices), conhenVertices, GL_STATIC_DRAW);
-//        glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
-//        glEnableVertexAttribArray(0);
-//        // 裁剪线条
-//        glBindVertexArray(VAO[2]);
-//        glBindBuffer(GL_ARRAY_BUFFER, VBO[3]);
-//        glBufferData(GL_ARRAY_BUFFER, sizeof(conhenVertices2), conhenVertices2, GL_STATIC_DRAW);
-//        glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
-//        glEnableVertexAttribArray(0);
-//    }
-//    // liang-barsky 算法绘制
-//    if (ex2_liang_barsky(0.3, -0.4, 0.5, 0.6, -0.5, 0.5, -0.5, 0.5)) {
-//        // 整条线
-//        glBindVertexArray(VAO[1]);
-//        glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
-//        glBufferData(GL_ARRAY_BUFFER, sizeof(liangVertices), liangVertices, GL_STATIC_DRAW);
-//        glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
-//        glEnableVertexAttribArray(0);
-//
-//        // 裁剪线条
-//        glBindVertexArray(VAO[2]);
-//        glBindBuffer(GL_ARRAY_BUFFER, VBO[3]);
-//        glBufferData(GL_ARRAY_BUFFER, sizeof(liangVertices2), liangVertices2, GL_STATIC_DRAW);
-//        glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
-//        glEnableVertexAttribArray(0);
-//    }
+    // 截取在内部的
+    if (ex2_cohen_sutherland(0.3, -0.2, 0.2, 0.6)) {
+        // 整条线
+        set_float_array(conhenVertices, 0.3, -0.2, 0.2, 0.6);
+        glBindVertexArray(VAO[1]);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(conhenVertices), conhenVertices, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
+        glEnableVertexAttribArray(0);
+        // 裁剪线条
+        glBindVertexArray(VAO[2]);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO[3]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(conhenVertices2), conhenVertices2, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
+        glEnableVertexAttribArray(0);
+    }
+    // liang-barsky 算法绘制
+    if (ex2_liang_barsky(0.3, -0.4, 0.5, 0.6, -0.5, 0.5, -0.5, 0.5)) {
+        // 整条线
+        glBindVertexArray(VAO[3]);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO[4]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(liangVertices), liangVertices, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
+        glEnableVertexAttribArray(0);
+
+        // 裁剪线条
+        glBindVertexArray(VAO[4]);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO[5]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(liangVertices2), liangVertices2, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
+        glEnableVertexAttribArray(0);
+    }
     // SUtherlandHodgeman 裁剪图形
-    glBindVertexArray(VAO[1]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
+    glBindVertexArray(VAO[5]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[6]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(suthHodgVertices), suthHodgVertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
@@ -218,22 +218,32 @@ void display(Shader &shader) {
     glBindVertexArray(VAO[0]);
     glDrawArrays(GL_LINE_LOOP, 0, 4);
 
-//    // 原始线条
-//    shader.use();
-//    shader.setVec3("setColor", 0.0f, 1.0f, 0.0f);
-//    glBindVertexArray(VAO[1]);
-//    glDrawArrays(GL_LINES, 0, 2);
-//
-//    // 裁剪线条
-//    shader.use();
-//    shader.setVec3("setColor", 0.3f, 0.5f, 0.5f);
-//    glBindVertexArray(VAO[2]);
-//    glDrawArrays(GL_LINES, 0, 2);
-
     // 原始线条
     shader.use();
     shader.setVec3("setColor", 0.0f, 1.0f, 0.0f);
     glBindVertexArray(VAO[1]);
+    glDrawArrays(GL_LINES, 0, 2);
+
+    // 裁剪线条
+    shader.use();
+    shader.setVec3("setColor", 0.3f, 0.5f, 0.5f);
+    glBindVertexArray(VAO[2]);
+    glDrawArrays(GL_LINES, 0, 2);
+
+    shader.use();
+    shader.setVec3("setColor", 0.3f, 0.5f, 0.5f);
+    glBindVertexArray(VAO[3]);
+    glDrawArrays(GL_LINES, 0, 2);
+
+    shader.use();
+    shader.setVec3("setColor", 0.2f, 0.8f, 0.2f);
+    glBindVertexArray(VAO[4]);
+    glDrawArrays(GL_LINES, 0, 2);
+
+    // 原始线条
+    shader.use();
+    shader.setVec3("setColor", 0.0f, 1.0f, 0.0f);
+    glBindVertexArray(VAO[5]);
     glDrawArrays(GL_LINE_LOOP, 0, 4);
 }
 
