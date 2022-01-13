@@ -206,17 +206,17 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //创建glfw窗口
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ex4", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "zhb6109119065", nullptr, nullptr);
     if (window == nullptr) {
         cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
         return -1;
     }
 
-    glfwMakeContextCurrent(window);//将window设置为接下来操作的主窗口
+    glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {//使用glad加载glfw的所有函数指针
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         cout << "Failed to initialize GLAD" << endl;
         return -1;
     }

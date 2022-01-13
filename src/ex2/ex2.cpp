@@ -85,7 +85,6 @@ void bind_data() {
 }
 
 int main() {
-    //实例化glfw函数
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -97,7 +96,7 @@ int main() {
     }
     cout << "N is" << n << endl;
 
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ex2", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "zhb6109119065", nullptr, nullptr);
     if (window == nullptr) {
         cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
