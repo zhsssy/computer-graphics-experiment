@@ -14,8 +14,8 @@
 #include "Model.h"
 #include <iostream>
 
-const char *vertexShaderPath = "../../../model_vs.glsl";
-const char *fragmentShaderPath = "../../../model_fs.glsl";
+const char *vertexShaderPath = "../../../shadersrc/model_vs.glsl";
+const char *fragmentShaderPath = "../../../shadersrc/model_fs.glsl";
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
@@ -92,11 +92,10 @@ int main() {
     Shader ourShader(vertexShaderPath, fragmentShaderPath);
 
     Model ourModel("../../../nanosuit/nanosuit.obj");
-    Model ourModel2("294_kitten.off");
 
 
     // draw in wireframe
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
@@ -109,7 +108,6 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         display(ourShader, ourModel);
-        display(ourShader, ourModel2);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -3,8 +3,6 @@
 #include "shader.h"
 #include <iostream>
 #include <cstdlib>
-#include <cmath>
-#include <vector>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 
@@ -12,8 +10,8 @@ using namespace std;
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-const char *vertexShaderPath = "../../../vs.glsl";
-const char *fragmentShaderPath = "../../../fs.glsl";
+const char *vertexShaderPath = "../../../shadersrc/vs.glsl";
+const char *fragmentShaderPath = "../../../shadersrc/fs.glsl";
 
 unsigned int VBO, VAO, CVBO;
 int n = 0;
